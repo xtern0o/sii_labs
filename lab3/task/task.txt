@@ -1,0 +1,238 @@
+ЛАБОРАТОРНАЯ РАБОТА №3
+SUPPORT VECTOR MACHINE (SVM)
+
+Курс: «Системы искусственного интеллекта»
+
+ОБЩИЕ ТРЕБОВАНИЯ
+
+Основные элементы лабораторной необходимо реализовать самостоятельно.
+Нельзя использовать готовые SVM-модели и основные элементы ML-pipeline из sklearn вместо собственной реализации.
+
+Запрещено использовать вместо своей реализации:
+- sklearn.svm.SVC;
+- sklearn.svm.LinearSVC;
+- sklearn.linear_model.SGDClassifier в качестве SVM;
+- sklearn.model_selection.train_test_split;
+- sklearn.preprocessing.StandardScaler;
+- и аналогичные готовые реализации основных частей лабораторной.
+
+Допускается использовать:
+- NumPy;
+- Pandas;
+- Matplotlib;
+- библиотеки для загрузки данных;
+
+
+Цель работы — самостоятельно реализовать Linear Soft-Margin SVM и разобраться с margin, hinge loss, regularization и batch/mini-batch обучением.
+
+
+ДАТАСЕТ:
+
+
+Banknote Authentication Dataset
+
+Официальный источник UCI:
+https://archive.ics.uci.edu/dataset/267/banknote+authentication
+
+Kaggle:
+https://www.kaggle.com/datasets/ritesaluja/bank-note-authentication-uci-data
+
+Target:
+class
+
+Датасет содержит 1372 объекта и 4 числовых признака:
+- variance;
+- skewness;
+- curtosis;
+- entropy.
+
+Задача — бинарная классификация банкнот.
+
+
+ЧТО НУЖНО РЕАЛИЗОВАТЬ
+
+
+1. Загрузить и кратко исследовать датасет.
+
+2. Сформировать X и y.
+
+3. Для внутренней реализации SVM привести target к {-1, +1}.
+
+4. Самостоятельно выполнить stratified train/validation/test split.
+
+5. Самостоятельно реализовать scaling:
+- fit только на train;
+- transform для train/validation/test.
+
+6. Реализовать собственный класс LinearSVM.
+
+Минимальный интерфейс:
+- __init__;
+- fit;
+- decision_function;
+- predict.
+
+7. В собственной модели реализовать:
+- веса w;
+- bias b;
+- linear score w^T x + b;
+- Hinge Loss как основную функцию потерь:
+  L_hinge = max(0, 1 - y * score);
+- L2-регуляризацию;
+- итоговую функцию потерь SVM;
+- subgradient по w и b;
+- обновление параметров градиентным методом.
+
+8. Реализовать обучение по batch/mini-batch:
+- параметр batch_size;
+- разбиение train на batches;
+- shuffle объектов между эпохами.
+
+9. Хранить историю Hinge Loss / total loss по эпохам и построить график обучения.
+
+10. Проверить несколько значений силы регуляризации (C или lambda — в зависимости от выбранной параметризации).
+
+11. Проверить несколько batch_size.
+
+12. Подбирать гиперпараметры только по validation.
+
+13. Сравнить SVM:
+- без scaling;
+- со scaling.
+
+14. Оценить финальную модель по:
+- Accuracy;
+- Precision;
+- Recall;
+- F1;
+- ROC-AUC;
+- PR-AUC.
+
+Для ROC-AUC и PR-AUC использовать непрерывный score из decision_function(), а не классы из predict().
+
+15. Построить:
+- confusion matrix;
+- ROC-кривую;
+- Precision-Recall кривую.
+
+16. Сравнить SVM со своей LogisticRegressionGD из Лабораторной работы №1.
+Сравнение выполнять на одном и том же split.
+Для Logistic Regression ROC-AUC и PR-AUC считать по вероятностям из predict_proba().
+
+17. Выполнить отдельную 2D-визуализацию SVM:
+- выбрать два признака;
+- обучить отдельную SVM только на них;
+- показать decision boundary;
+- показать линии margin;
+- выделить объекты на/внутри margin.
+
+ВАЖНО:
+2D-модель нужна только для визуализации геометрии SVM. Финальные метрики должны считаться на модели, использующей все выбранные признаки.
+
+18. Построить набор графиков по эксперименту. Обязательно должны быть:
+- Hinge Loss / total loss по эпохам;
+- validation-метрика в зависимости от C или lambda;
+- validation-метрика в зависимости от batch_size;
+- ROC-кривая;
+- Precision-Recall кривая;
+- confusion matrix;
+- 2D decision boundary и margin;
+- графическое сравнение итоговых результатов SVM и Logistic Regression.
+
+19. Сделать вывод:
+- какое значение regularization оказалось лучшим;
+- какой batch_size оказался лучше;
+- как повлиял scaling;
+- чем результат SVM отличается от Logistic Regression;
+- что показывают ROC-AUC и PR-AUC;
+- есть ли признаки underfit/overfit.
+
+
+ЧТО НУЖНО СДАТЬ
+
+
+1. Ноутбук с полностью воспроизводимым кодом.
+2. Собственную реализацию LinearSVM.
+3. Собственный split и scaling.
+4. График Hinge Loss / total loss по эпохам.
+5. Графики сравнения гиперпараметров.
+6. Итоговые метрики:
+   - Accuracy;
+   - Precision;
+   - Recall;
+   - F1;
+   - ROC-AUC;
+   - PR-AUC.
+7. Confusion matrix.
+8. ROC-кривую.
+9. Precision-Recall кривую.
+10. 2D-визуализацию decision boundary и margin.
+11. Графическое и численное сравнение с собственной Logistic Regression.
+12. Краткий вывод по эксперименту.
+
+
+
+
+ДОПОЛНИТЕЛЬНО / БОНУС
+
+
+По желанию:
+- реализовать One-vs-Rest поверх собственного LinearSVM для multiclass classification;
+или
+- исследовать kernel SVM и объяснить kernel trick на отдельном эксперименте.
+
+Готовую kernel SVM нельзя выдавать за основную самостоятельную реализацию лабораторной.
+
+
+ПРИМЕРНЫЕ ВОПРОСЫ НА ЗАЩИТЕ:
+
+
+1. Что такое гиперплоскость в SVM?
+2. Что означают w и b?
+3. Почему target удобно кодировать как -1 и +1?
+4. Что такое margin?
+5. Почему ширина margin связана с 2/||w||?
+6. Что такое support vectors?
+7. Почему не все train-объекты одинаково влияют на SVM?
+8. Чем hard-margin отличается от soft-margin SVM?
+9. Что такое slack variable?
+10. Что означает параметр C?
+11. Чем параметр C отличается от lambda в другой записи objective?
+12. Что такое hinge loss?
+13. Когда hinge loss равен нулю?
+14. Может ли правильно классифицированный объект иметь ненулевой hinge loss?
+15. Почему hinge loss не дифференцируема в одной точке?
+16. Что такое subgradient?
+17. Как меняется gradient, если объект находится вне margin?
+18. Как меняется gradient, если объект нарушает margin?
+19. Зачем SVM нужна L2-регуляризация?
+20. Почему scaling важен для SVM?
+21. Что происходит внутри fit()?
+22. Что делает decision_function()?
+23. Чем decision_function отличается от probability?
+24. Что делает predict()?
+25. Что означает batch_size?
+26. Чем Batch GD отличается от SGD и Mini-batch GD?
+27. Зачем shuffle перед формированием batches?
+28. Что произойдёт при слишком большом learning rate?
+29. Что произойдёт при слишком большом C?
+30. Что произойдёт при слишком сильной lambda-регуляризации?
+31. Почему C/lambda нельзя выбирать по test?
+32. Как определить support vectors в своей реализации?
+33. Почему SVM может работать хорошо в пространствах высокой размерности?
+34. Что такое kernel trick?
+35. Чем linear kernel отличается от RBF?
+36. Что означает gamma в RBF kernel?
+37. Как SVM решает multiclass-задачу?
+38. Чем One-vs-Rest отличается от One-vs-One?
+39. Чем Linear SVM принципиально отличается от Logistic Regression?
+40. Что бы вы улучшили в своей реализации и почему?
+
+41. Что показывает ROC-кривая?
+42. Что такое TPR и FPR?
+43. Что означает ROC-AUC?
+44. Почему ROC-AUC нужно считать по score, а не по готовым классам?
+45. Что показывает Precision-Recall кривая?
+46. Что означает PR-AUC?
+47. Почему PR-AUC особенно полезна при дисбалансе классов?
+48. Чем ROC-AUC отличается от PR-AUC?
